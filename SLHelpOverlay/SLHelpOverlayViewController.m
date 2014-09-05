@@ -53,23 +53,14 @@ static UIFont *kDefaultLabelFont;
     [super didReceiveMemoryWarning];
 }
 
-+ (SLHelpOverlayViewController *)overlayWithTitle:(NSString *)title
++ (SLHelpOverlayViewController *)overlay
 {
-    return [[SLHelpOverlayViewController alloc] initWithTitle:title];
+    return [[SLHelpOverlayViewController alloc] init];
 }
 
 - (SLHelpOverlayViewController *)init
 {
-    return [self initWithTitle:nil];
-}
-
-- (SLHelpOverlayViewController *)initWithTitle:(NSString *)title
-{
     if (self = [super init]) {
-        if (title) {
-            self.overlayTitle = title;
-        }
-        
         // Set these value to the default initially so that the value can be later set to 0
         self.arrowViewInset = kDefaultArrowViewInset;
         self.borderWidth = kDefaultBorderWidth;
@@ -129,7 +120,10 @@ static UIFont *kDefaultLabelFont;
 - (void)displayOverlay
 {
     if ((self.delegate && [self.delegate shouldDisplayHelpOverlay:self]) || !self.delegate) {
-        [self.delegate willDisplayHelpOverlay:self];
+        if ([self.delegate respondsToSelector:@selector(willDisplayHelpOverlay:)]) {
+            [self.delegate willDisplayHelpOverlay:self];
+        }
+        
         self.isDisplayed = YES;
         self.view.alpha = 0.0f;
         
@@ -207,17 +201,24 @@ static UIFont *kDefaultLabelFont;
                 [UIView animateWithDuration:kAnimationFadeDuration delay:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^{
                     overlayItem.itemView.alpha = 1.0f;
                     overlayItem.itemView.frame = finalItemFrame;
-                } completion:nil];
+                } completion:^(BOOL finished) {
+                    if ([self.delegate respondsToSelector:@selector(didDisplayHelpOverlay:)]) {
+                        [self.delegate didDisplayHelpOverlay:self];
+                    }
+                }];
             }
         }
         
-        [self.delegate didDisplayHelpOverlay:self];
+
     }
 }
 
 - (void)closeOverlayTapped
 {
-    [self.delegate willDismissHelpOverlay:self];
+    if ([self.delegate respondsToSelector:@selector(willDismissHelpOverlay:)]) {
+        [self.delegate willDismissHelpOverlay:self];
+    }
+    
     [self dismissOverlayAnimated:YES];
 }
 
@@ -229,13 +230,19 @@ static UIFont *kDefaultLabelFont;
         } completion:^(BOOL finished) {
             [self.view removeFromSuperview];
             self.isDisplayed = NO;
+            
+            if ([self.delegate respondsToSelector:@selector(didDismissHelpOverlay:)]) {
+                [self.delegate didDismissHelpOverlay:self];
+            }
         }];
     } else {
         [self.view removeFromSuperview];
         self.isDisplayed = NO;
+        
+        if ([self.delegate respondsToSelector:@selector(didDismissHelpOverlay:)]) {
+            [self.delegate didDismissHelpOverlay:self];
+        }
     }
-    
-    [self.delegate didDisplayHelpOverlay:self];
 }
 
 #pragma mark - Global Item Properties

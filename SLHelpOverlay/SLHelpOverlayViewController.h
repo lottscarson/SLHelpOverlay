@@ -27,7 +27,6 @@
 
 @interface SLHelpOverlayViewController : UIViewController
 
-@property (copy, nonatomic) NSString *overlayTitle;
 @property (assign, nonatomic) BOOL slideAnimationEnabled;
 @property (assign, nonatomic) BOOL isDisplayed;
 
@@ -53,8 +52,7 @@
 
 @property (weak, nonatomic) id<SLHelpOverlayDelegate> delegate;
 
-+ (SLHelpOverlayViewController *)overlayWithTitle:(NSString *)title;
-- (SLHelpOverlayViewController *)initWithTitle:(NSString *)title;
++ (SLHelpOverlayViewController *)overlay;
 
 - (void)addItemToOverlayWithText:(NSString *)itemText
                   arrowDirection:(HelpOverlayArrowDirection)arrowDirection

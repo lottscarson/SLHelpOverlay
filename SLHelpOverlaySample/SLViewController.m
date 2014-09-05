@@ -65,6 +65,7 @@ static CGFloat const kWideArrowValue        = 50.0f;
 - (IBAction)displayHelpOverlay:(id)sender
 {
     self.helpOverlay = [[SLHelpOverlayViewController alloc] init];
+    self.helpOverlay.delegate = self;
     
     self.helpOverlay.borderWidth = 0.0f;
     
