@@ -143,7 +143,11 @@ static UIFont *kDefaultLabelFont;
         
         [UIView animateWithDuration:0.5f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.view.alpha = 1.0f;
-        } completion:nil];
+        } completion:^(BOOL finished) {
+            if ([self.delegate respondsToSelector:@selector(didDisplayHelpOverlay:)]) {
+                [self.delegate didDisplayHelpOverlay:self];
+            }
+        }];
         
         // Fancy slide animation
         if (self.slideAnimationEnabled) {
@@ -201,15 +205,9 @@ static UIFont *kDefaultLabelFont;
                 [UIView animateWithDuration:kAnimationFadeDuration delay:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^{
                     overlayItem.itemView.alpha = 1.0f;
                     overlayItem.itemView.frame = finalItemFrame;
-                } completion:^(BOOL finished) {
-                    if ([self.delegate respondsToSelector:@selector(didDisplayHelpOverlay:)]) {
-                        [self.delegate didDisplayHelpOverlay:self];
-                    }
-                }];
+                } completion:nil];
             }
         }
-        
-
     }
 }
 
