@@ -19,7 +19,6 @@ static NSInteger const kBubblePointCount = 7;
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
-        self.showShadow = NO;
     }
     
     return self;
@@ -66,14 +65,6 @@ static NSInteger const kBubblePointCount = 7;
         if (self.borderWidth > 0) {
             [bubblePath stroke];
         }
-        
-        if (self.showShadow) {
-            self.layer.masksToBounds = NO;
-            self.layer.shadowColor = [UIColor blackColor].CGColor;
-            self.layer.shadowOffset = CGSizeMake(0.0f, 3.0f);
-            self.layer.shadowOpacity = 0.5f;
-            self.layer.shadowPath = bubblePath.CGPath;
-        }
     }
 }
 
@@ -98,9 +89,10 @@ static NSInteger const kBubblePointCount = 7;
     CGFloat flat = 0;
     CGFloat radius = 5.0f;
     
+    points[0] = CGPointMake(tipPoint.x, tipPoint.y);
+    
     // Right-facing arrow
     if (tipPoint.x > bubbleRect.size.width) {
-        points[0] = CGPointMake(tipPoint.x, tipPoint.y);
         points[1] = CGPointMake(tailPoint.x, tipPoint.y + (arrowWidth / 2));
         points[2] = CGPointMake(tailPoint.x, bubbleRect.size.height);
         points[3] = CGPointMake(0, bubbleRect.size.height);
@@ -122,7 +114,6 @@ static NSInteger const kBubblePointCount = 7;
     }
     // Left-facing arrow
     else if (tipPoint.x < bubbleRect.origin.x) {
-        points[0] = CGPointMake(tipPoint.x, tipPoint.y);
         points[1] = CGPointMake(bubbleRect.origin.x, tipPoint.y - (arrowWidth / 2));
         points[2] = CGPointMake(bubbleRect.origin.x, 0);
         points[3] = CGPointMake(bubbleRect.origin.x + bubbleRect.size.width, 0);
@@ -144,7 +135,6 @@ static NSInteger const kBubblePointCount = 7;
     }
     // Down-facing arrow
     else if (bubbleRect.origin.y < tipPoint.y) {
-        points[0] = CGPointMake(tipPoint.x, tipPoint.y);
         points[1] = CGPointMake(tipPoint.x - (arrowWidth / 2), bubbleRect.size.height);
         points[2] = CGPointMake(0, bubbleRect.size.height);
         points[3] = CGPointMake(0, 0);
@@ -166,7 +156,6 @@ static NSInteger const kBubblePointCount = 7;
     }
     // Up-facing arrow
     else if (bubbleRect.origin.y > tipPoint.y) {
-        points[0] = CGPointMake(tipPoint.x, tipPoint.y);
         points[1] = CGPointMake(tipPoint.x + (arrowWidth / 2), arrowLength);
         points[2] = CGPointMake(bubbleRect.size.width, arrowLength);
         points[3] = CGPointMake(bubbleRect.size.width, bubbleRect.size.height + arrowLength);

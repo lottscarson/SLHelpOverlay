@@ -14,7 +14,6 @@
 @property (assign, nonatomic) CGFloat borderWidth;
 @property (weak, nonatomic) UIColor *bubbleColor;
 @property (weak, nonatomic) UIColor *borderColor;
-@property (assign, nonatomic) BOOL showShadow;
 
 - (void)setupBubbleWithArrowTipPoint:(CGPoint)tipPoint
                       arrowTailPoint:(CGPoint)tailPoint
